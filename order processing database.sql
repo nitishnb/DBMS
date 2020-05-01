@@ -56,3 +56,9 @@ SELECT * FROM ITEM1;
 SELECT * FROM ORDERITEM;
 SELECT * FROM WAREHOUSE;
 SELECT * FROM SHIPMENT;
+
+select c.custno,count(*) as No_of_orders,avg(o.orderamount) as Avg_order_amount from customer1 c,order1 o where o.custno=c.custno group by c.custno;
+
+select s.orderno from shipment s,warehouse w where s.warehouseno=w.warehouseno and w.city='Bangalore' group by orderno having count(*)=(select count(*) from warehouse where city='Bangalore') and not(count(*)=0);
+
+delete from item1 where itemno=3;
