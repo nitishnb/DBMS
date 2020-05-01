@@ -85,21 +85,14 @@ INSERT INTO  ORDER_DETAILS VALUES(5,15,3);
 INSERT INTO  ORDER_DETAILS VALUES(6,17,10);
 
 
-SELECT AUTHOR.AUTHOR_ID,AUTHOR.NAME,AUTHOR.CITY,AUTHOR.COUNTRY,
-COUNT(CATALOG.AUTHOR_ID)
-FROM AUTHOR,CATALOG
-WHERE AUTHOR.AUTHOR_ID = CATALOG.AUTHOR_ID 
-GROUP BY CATALOG.AUTHOR_ID, AUTHOR.AUTHOR_ID, AUTHOR.NAME, AUTHOR.CITY, AUTHOR.COUNTRY
-HAVING COUNT(CATALOG.AUTHOR_ID) >1;
-
 SELECT * FROM AUTHOR;
 SELECT * FROM PUBLISHER;
 SELECT * FROM CATEGORY;
 SELECT * FROM CATALOG;
 SELECT * FROM ORDER_DETAILS;
 
-UPDATE CATALOG
-SET CATALOG.PRICE = CATALOG.PRICE * 1.1
-WHERE CATALOG.PUBLISHER_ID = (SELECT PUBLISHER.PUBLISHER_ID 
-                              FROM PUBLISHER WHERE PUBLISHER.NAME = 'PEARSON' );
-COMMIT;
+select * from author where author_id in (select author_id from catalog where year>2000 and price>(select avg(price) from catalog) group by author_id having count(*)>=2);
+
+select a.author_id,a.name,a.city,a.country from author a,catalog c where c.author_id=a.author_id and c.book_id=(select book_id from order_details group by book_id having sum(quantity)=(select max(quantity) from (select sum(quantity) as quantity from order_details group by book_id)));
+
+update catalog set price=1.1*price where publisher_id=(select publisher_id from publisher where name='BPB');
