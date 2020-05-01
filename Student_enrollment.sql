@@ -76,5 +76,9 @@ select * from text;
 select * from adoption;
 select * from enroll;
 
-select b.courseid,t.isbn,t.book_title from adoption b,text t,course c where c.courseid=b.courseid and c.deptid='CSE' and b.isbn=t.isbn and c.courseid in (select courseid from (select courseid from adoption group by courseid,isbn) group by courseid having count(*)>=2) order by t.book_title;
- select distinct c.deptid from course c where not exists ((select b.isbn from adoption b,course c1 where c1.courseid=b.courseid and c1.deptid=c.deptid) minus (select isbn from text where publisher='PHI')) and exists (select b.isbn from adoption b,course c1 where c1.courseid=b.courseid and c1.deptid=c.deptid);
+insert into text values(&book_isbn,'&book_title','&publisher','&author');
+insert into book_adoption values(&courseno,&sem,&book_isbn);
+                                        
+select b.courseno,t.book_isbn,t.book_title from book_adoption b,text t,course c where c.courseno=b.courseno and c.dept='CS' and b.book_isbn=t.book_isbn and c.courseno in (select courseno from (select courseno from book_adoption group by courseno,book_isbn) group by courseno having count(*)>=2) order by t.book_title;
+
+select distinct c.dept from course c where not exists ((select b.book_isbn from book_adoption b,course c1 where c1.courseno=b.courseno and c1.dept=c.dept) minus (select book_isbn from text where publisher='BPB')) and exists (select b.book_isbn from book_adoption b,course c1 where c1.courseno=b.courseno and c1.dept=c.dept);
