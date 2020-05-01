@@ -75,3 +75,13 @@ SELECT * FROM ACCOUNTS;
 SELECT * FROM CUSTOMER;
 SELECT * FROM LOAN;
 SELECT * FROM BORROWER;
+
+select d.customer_name from depositor d,accounts a where a.accno=d.accno and a.branch_name='KRMarket' group by d.customer_name having count(*)>=2;
+
+
+
+select c.customer_name from customer c where exists(select branch_name from branch where branch_city='Bangalore') and not exists ((select branch_name from branch where branch_city='Bangalore') minus (select b.branch_name from branch b,accounts a,depositor d where d.customer_name=c.customer_name and d.accno=a.accno and a.branch_name=b.branch_name));
+
+
+
+delete from accounts where accno in (select a.accno from accounts a,branch b where a.branch_name=b.branch_name and b.branch_city='Bangalore');
